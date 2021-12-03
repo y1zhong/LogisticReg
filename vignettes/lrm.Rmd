@@ -95,7 +95,7 @@ set.seed(1)
 y = sample(c(0,1), 100, replace = T)
 X = matrix(rnorm(1e3, 0, 10), 100, 10)
 compare_result = bench::mark({
-  lrm.coef = lrm(y,X)$coef
+  lrm.coef = unname(as.vector(lrm(y,X)$coef))
 }, {
   glm.coef = unname(glm(y ~ X, family = binomial, start=c(rep(0, 11)))[["coefficients"]])
 })

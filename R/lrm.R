@@ -70,11 +70,12 @@ lrm = function(y, X,
     Z = eta + solve(V) %*% (y - mu)
     XV = crossprod(X, V)
     beta_new = solve(XV %*% X) %*% XV %*% Z
-    epsilon = sqrt(t(beta_new-beta) %*% (beta_new-beta))
+    epsilon = sqrt(t(beta_new-beta) %*% (beta_new - beta))
     beta = beta_new
     iter = iter + 1
   }
-
+  res$coef = beta
+  
   # save probability and fitted y with estimated coefficients
   eta = X %*% beta
   res$prob = exp(eta) / (1 + exp(eta))
