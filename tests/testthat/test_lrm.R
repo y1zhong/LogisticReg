@@ -6,6 +6,23 @@ Xnew = round(matrix(rnorm(15, 0, 10), 5, 3), 3)
 colnames(Xnew) = c("A","B","C")
 
 test_that("lrm works", {
+  y_new = y
+  y_new[3] = 2
+  expect_error(lrm(y_new, X))
+})
+
+
+test_that("lrm works", {
+  y_new = as.factor(y)
+  expect_equal(as.vector(lrm(y_new, X)$dat$y), y)
+})
+
+
+test_that("lrm works", {
+  expect_error(lrm(c(y,1), X))
+})
+
+test_that("lrm works", {
   lrm.coefs = lrm(y, X)[["coef"]]
   glm.coefs = glm(y ~ X, family = binomial, start=numeric(ncol(X)+1))[["coefficients"]]
   expect_equal(as.vector(lrm.coefs), as.vector(glm.coefs))
@@ -52,11 +69,12 @@ test_that("lrm rsqr works", {
   expect_equal(as.vector(lrm_rsrqr2), as.vector(max_adj_R2))
 })
 
-test_that("lrm predict works", {
+test_that("lrm.predict works", {
   lrm.fit = lrm(y, X)
   glm.fit = glm(y ~ A+B+C, data=data.frame(X), family = binomial, start=numeric(ncol(X)+1))
   lrm.p = lrm.predict(Xnew = Xnew, lrm.fit)[,1]
   glm.p = predict(glm.fit, data.frame(Xnew),type = "response")
   expect_equal(as.vector(lrm.p), as.vector(glm.p))
+  expect_error(lrm.predict(Xnew = cbind(Xnew,rnorm(5)), lrm.fit))
 })
 
