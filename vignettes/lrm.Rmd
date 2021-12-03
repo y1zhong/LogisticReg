@@ -36,7 +36,7 @@ library(LogisticReg)
 
 We'll use the Smarket data set from ISLR package as example. This data set consists of percentage returns for the S&P 500 stock index over 1,250 days from 2001 to 2005. We use Direction(up or down) as binary outcome. The predictors are Lag1 to Lag5 and Volume. Check detail explanantion on covariates by `?Smarket`
 ```{r}
-require(ISLR)
+library(ISLR)
 data(Smarket)
 head(Smarket)
 
