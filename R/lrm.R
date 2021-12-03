@@ -2,9 +2,6 @@
 #'
 #'Logistic regression on binary outcome
 #'
-#'@import Rcpp
-#'@import RcppArmadillo
-#'@importFrom qgam log1pexp
 #'@importFrom stats pt
 #' 
 #'@param y vector with two different values
@@ -61,9 +58,22 @@ lrm = function(y, X,
                         ),
              intercept = intercept)
   
-  # iteratively reweighted least squares algorithm for beta coefficients
-  beta = update_beta(y, X, n, p ,tol, iter_max)
-  res$coef = as.vector(beta)
+  # iteratively reweighted least squares algorithm
+  beta = rep(0, p)
+  iter = 0
+  epsilon = 99
+  while (epsilon > tol & iter <= iter_max){
+    eta = X %*% beta
+    mu = exp(eta) / (1 + exp(eta))
+    nu = mu * (1 - mu)
+    V = diag(x=as.vector(nu))
+    Z = eta + solve(V) %*% (y - mu)
+    XV = crossprod(X, V)
+    beta_new = solve(XV %*% X) %*% XV %*% Z
+    epsilon = sqrt(t(beta_new-beta) %*% (beta_new-beta))
+    beta = beta_new
+    iter = iter + 1
+  }
 
   # save probability and fitted y with estimated coefficients
   eta = X %*% beta
@@ -72,7 +82,7 @@ lrm = function(y, X,
   
   ### check model fitting
   # save log likelihood
-  res$loglik = sum(y * eta  - log1pexp(eta))
+  res$loglik = sum(y * eta  - log(1+exp(eta)))
   res$deviance = -2 * res$loglik
   res$aic = 2*p + res$deviance
 
