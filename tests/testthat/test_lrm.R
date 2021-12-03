@@ -24,8 +24,20 @@ test_that("lrm works", {
   expect_equal(as.vector(lrm.loglik), as.vector(glm.loglik))
 })
 
-test_that("lrm rsqr works", {
+test_that("lrm works", {
+  lrm.dev = lrm(y, X)$deviance
+  glm.dev = glm(y ~ X, family = binomial, start=numeric(ncol(X)+1))[["deviance"]]
+  expect_equal(as.vector(lrm.dev), as.vector(glm.dev))
+})
 
+test_that("lrm works", {
+  lrm.aic = lrm(y, X)$aic
+  glm.aic = glm(y ~ X, family = binomial, start=numeric(ncol(X)+1))[["aic"]]
+  expect_equal(as.vector(lrm.aic), as.vector(glm.aic))
+})
+
+test_that("lrm rsqr works", {
+  
   lrm_rsrqr1 = lrm.rsqr(lrm(y, X))[[1]]
   lrm_rsrqr2 = lrm.rsqr(lrm(y, X))[[2]]
   glm.fit1 = logLik(glm(y ~ X, family = binomial, start=numeric(ncol(X)+1)))
