@@ -13,6 +13,7 @@ using namespace arma;
 //' @param tol integer for tolerance value
 //' @param iter_max integer to maximum iteration number 
 //' @return beta a vector of estimated coefficients
+//' @useDynLib LogisticReg
 //' @export
 // [[Rcpp::export]]
 arma::vec update_beta(arma::mat y, arma::mat X, 

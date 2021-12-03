@@ -12,6 +12,7 @@
 #' @param tol integer for tolerance value
 #' @param iter_max integer to maximum iteration number 
 #' @return beta a vector of estimated coefficients
+#' @useDynLib LogisticReg
 #' @export
 update_beta <- function(y, X, n, p, tol, iter_max) {
     .Call('_LogisticReg_update_beta', PACKAGE = 'LogisticReg', y, X, n, p, tol, iter_max)
