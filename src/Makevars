@@ -15,6 +15,7 @@
 #FLIBS = -L`gfortran -print-file-name=libgfortran.dylib | xargs dirname`
 
 CXX_STD = CXX11
+PKG_CPPFLAGS = -I"../inst/include/"
 #VER=-11
 #CC=gcc$(VER)
 #CXX=g++$(VER)
