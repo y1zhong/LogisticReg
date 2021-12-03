@@ -34,15 +34,11 @@ First, let's install the package from github
 library(LogisticReg)
 ```
 
-We'll use the Smarket data set from ISLR package as example. This data set consists of percentage returns for the S&P 500 stock index over 1,250 days from 2001 to 2005. We use Direction(up or down) as binary outcome. The predictors are Lag1 to Lag5 and Volume. Check detail explanantion on covariates by `?Smarket`
+We'll use simulated data of 100 samples, 10 predictors to show the way of using lrm() and compare it with the results from glm().
 ```{r}
-install.packages("ISLR")
-library(ISLR)
-data(Smarket)
-head(Smarket)
-
-y = Smarket[, "Direction"]
-X = Smarket[, c("Lag1","Lag2","Lag3","Lag4", "Lag5", "Volume")]
+set.seed(1)
+y = sample(c(0, 1), 100, replace = TRUE)
+X = matrix(rnorm(1e4), 100, 10)
 ```
 
 ## Fit Models
@@ -50,7 +46,7 @@ X = Smarket[, c("Lag1","Lag2","Lag3","Lag4", "Lag5", "Volume")]
 Now let's fit model with intercept in both glm() and lrm(). We set the same initial value to achivev same results from Iteratively Reweighting L.S. iterations.
 ```{r}
 # fit glm
-glm.fit = glm(y ~ as.matrix(X), family = binomial, start=c(rep(0, 7)))
+glm.fit = glm(y ~ as.matrix(X), family = binomial, start=c(rep(0, 11)))
 summary(glm.fit)
 # fit lrm
 lrm.fit = lrm(y, X)
@@ -72,7 +68,7 @@ lrm.rsqr(lrm.fit)
 
 To predict new data, we can use lrm.predict() with a input matrix of new data and the list returned from lrm()
 ```{r}
-Xnew = sapply(1:6, function(i)rnorm(5, mean(X[,i]), sd(X[,i])))
+Xnew = sapply(1:10, function(i)rnorm(5, mean(X[,i]), sd(X[,i])))
 lrm.predict(Xnew, lrm.fit)
 ```
 
@@ -80,21 +76,15 @@ lrm.predict(Xnew, lrm.fit)
 We can do the same thing with non-intercept model.  For simiplicity we won't check every results here again.
 ```{r}
 # fit glm
-glm.fit = glm(Direction ~ -1+Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, data = Smarket, 
-    family = binomial, start=c(rep(0, 6)))
-
+glm.fit = glm(y ~ -1 + as.matrix(X), family = binomial, start=c(rep(0, 10)))
+summary(glm.fit)
 # fit lrm
-lrm.fit = lrm(y = Smarket[, "Direction"],
-              X = Smarket[, c("Lag1","Lag2","Lag3","Lag4", "Lag5", "Volume")],
-              intercept = F)
+lrm.fit = lrm(y, X, intercept = FALSE)
 ```
 
 
 # Efficiency
 ```{r}
-set.seed(1)
-y = sample(c(0,1), 100, replace = T)
-X = matrix(rnorm(1e3, 0, 10), 100, 10)
 compare_result = bench::mark({
   lrm.coef = unname(as.vector(lrm(y,X)$coef))
 }, {
