@@ -26,4 +26,4 @@ PKG_CPPFLAGS = -I"../inst/include/"
 #CXXFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
 # FLIBS=-L/usr/local/Cellar/gcc/11.1.0_1/lib/gcc/11
 # FLIBS = -L`gfortran -print-file-name=libgfortran.dylib | xargs dirname`
-#FLIBS=`gfortran -print-search-dirs | grep ^libraries: | sed 's|libraries: =||' | sed 's|:| -L|g' | sed 's|^|-L|'`
+FLIBS=`gfortran -print-search-dirs | grep ^libraries: | sed 's|libraries: =||' | sed 's|:| -L|g' | sed 's|^|-L|'`
