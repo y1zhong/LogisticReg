@@ -1,0 +1,106 @@
+---
+title: "LogisticReg Tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{lrm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction to LogisticReg
+
+LogisticReg is an R package perform logistic regression on binary outcome. This mimic the function glm() from stats package but only focus on the binomial or Bernoulli family with a logit link.
+
+In this package, what you can do includes but not limited to:
+1. Fit logistic regression with or without intercept
+2. Get estimated model coefficients and covariance matrix
+3. Evaluate your model fitting by deviance and $R^2$
+4. Predict outcome with new data
+
+# Tutorial 
+The tutorial will demonstrate how to use the functions in LogisticReg package and comapre the accuracy and efficiency with glm() output.  
+
+First, let's install the package from github
+```{r}
+#devtools::install_github("y1zhong/LogisticReg",build_vignettes = T)
+library(LogisticReg)
+```
+
+We'll use the Smarket data set from ISLR package as example. This data set consists of percentage returns for the S&P 500 stock index over 1,250 days from 2001 to 2005. We use Direction(up or down) as binary outcome. The predictors are Lag1 to Lag5 and Volume. Check detail explanantion on covariates by `?Smarket`
+```{r}
+require(ISLR)
+data(Smarket)
+head(Smarket)
+
+y = Smarket[, "Direction"]
+X = Smarket[, c("Lag1","Lag2","Lag3","Lag4", "Lag5", "Volume")]
+```
+
+## Fit Models
+
+Now let's fit model with intercept in both glm() and lrm(). We set the same initial value to achivev same results from Iteratively Reweighting L.S. iterations.
+```{r}
+# fit glm
+glm.fit = glm(y ~ as.matrix(X), family = binomial, start=c(rep(0, 7)))
+summary(glm.fit)
+# fit lrm
+lrm.fit = lrm(y, X)
+```
+
+
+## Check Results
+lrm() returns a list with the data and the information from fitted model. We use naems(lrm.fit) to check the return informations in the list instead of directly printing it.
+```{r}
+names(lrm.fit)
+all.equal(unname(glm.fit$coefficients), as.vector(lrm.fit$coef))
+all.equal(unname(glm.fit$fitted.values), as.vector(lrm.fit$prob))
+```
+
+In addition, we can calculate Cox & Snell	$R^2$ value and the adjusted value of it to understand the goodness of fit.
+```{r}
+lrm.rsqr(lrm.fit)
+```
+
+To predict new data, we can use lrm.predict() with a input matrix of new data and the list returned from lrm()
+```{r}
+Xnew = sapply(1:6, function(i)rnorm(5, mean(X[,i]), sd(X[,i])))
+lrm.predict(Xnew, lrm.fit)
+```
+
+
+We can do the same thing with non-intercept model.  For simiplicity we won't check every results here again.
+```{r}
+# fit glm
+glm.fit = glm(Direction ~ -1+Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, data = Smarket, 
+    family = binomial, start=c(rep(0, 6)))
+
+# fit lrm
+lrm.fit = lrm(y = Smarket[, "Direction"],
+              X = Smarket[, c("Lag1","Lag2","Lag3","Lag4", "Lag5", "Volume")],
+              intercept = F)
+```
+
+
+# Efficiency
+```{r}
+set.seed(1)
+y = sample(c(0,1), 100, replace = T)
+X = matrix(rnorm(1e3, 0, 10), 100, 10)
+compare_result = bench::mark({
+  lrm.coef = lrm(y,X)$coef
+}, {
+  glm.coef = unname(glm(y ~ X, family = binomial, start=c(rep(0, 11)))[["coefficients"]])
+})
+compare_result = as.numeric(compare_result[[3]])
+ratio = compare_result[2] / compare_result[1]
+
+```
+

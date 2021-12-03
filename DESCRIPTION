@@ -1,11 +1,19 @@
 Package: LogisticReg
 Type: Package
-Title: What the package does (short line)
+Title: Logisitics regression on binary data
 Version: 1.0
-Date: 2021-12-03
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
-Imports: Rcpp (>= 1.0.7)
+Date: 2021-12-01
+Author: Yuan Zhong
+Maintainer: Yuan Zhong <ylzhong@umich.edu>
+Description: This package fits logistics regression on data with two-level outcome. It obtains estimated coefficients, covariance matrix, test statistics, and goodness of fit information. It predicts new outcome based on fitted model.
+License: GPL-2
+Imports: Rcpp (>= 1.0.7), qgam, stats
 LinkingTo: Rcpp, RcppArmadillo
+RoxygenNote: 7.1.2
+Encoding: UTF-8
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+VignetteBuilder: knitr
+Config/testthat/edition: 3

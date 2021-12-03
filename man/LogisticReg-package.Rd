@@ -13,23 +13,18 @@
 The DESCRIPTION file:
 \packageDESCRIPTION{LogisticReg}
 \packageIndices{LogisticReg}
-~~ An overview of how to use the package, including the most important functions ~~
+
 }
 \author{
 \packageAuthor{LogisticReg}
 
 Maintainer: \packageMaintainer{LogisticReg}
 }
-\references{
-~~ Literature or other references for background information ~~
-}
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation ~~
-~~ directory ~~
-\keyword{ package }
-\seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
+
 \examples{
-~~ simple examples of the most important functions ~~
+set.seed(1)
+y = sample(c(0, 1), 10, replace = TRUE)
+ X = round(matrix(rnorm(30), 10, 3), 3)
+res = lrm(y, X)
+res = lrm(y, X, intercept = FALSE)
 }
