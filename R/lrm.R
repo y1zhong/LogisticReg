@@ -2,7 +2,6 @@
 #'
 #'Logistic regression on binary outcome
 #'
-#'@importFrom stats pt
 #' 
 #'@param y vector with two different values
 #'@param X design matrix, with each row of samples and each column of covariates
