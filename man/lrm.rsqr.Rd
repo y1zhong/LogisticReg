@@ -10,10 +10,10 @@ lrm.rsqr(lrm_res)
 \item{lrm_res}{a list generated from lrm()}
 }
 \value{
-list, containing two
+list, containing two R-square values
 }
 \description{
-get Cox-Snell R-square and maximum adjusted R-square
+get Cox & Snell and Nagelkerke R-square
 }
 \examples{
 set.seed(1)

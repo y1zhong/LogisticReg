@@ -22,6 +22,6 @@ set.seed(1)
 y = sample(c(0, 1), 10, replace = TRUE)
 X = round(matrix(rnorm(30), 10, 3), 3)
 res = lrm(y, X)
-lrm.predict(Xnew=matrix(rnorm(15), 5, 3), lrm_res=res)
+lrm.predict(Xnew=matrix(rnorm(15), 5, 3), lrm_res = res)
 
 }
