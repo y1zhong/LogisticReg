@@ -37,7 +37,7 @@ First, let's load the package
 library(LogisticReg)
 ```
 
-We'll use a simulated dataset of 100 samples, 10 predictors to show the way of using lrm() and compare it with the results from glm().
+We'll use a simulated dataset of 1000 samples, 10 predictors to show the way of using lrm() and compare it with the results from glm().
 ```{r}
 set.seed(1)
 n = 1000
