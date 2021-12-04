@@ -64,9 +64,11 @@ lrm() returns a list with the data and the information from fitted model. We do 
 names(lrm.fit)
 ```
 
-Let's check if lrm() and glm() give the same coefficients and fitted probabilities.  
+Fisrt, we check convernce. Then let's check if lrm() and glm() give the same coefficients and fitted probabilities.  
 
 ```{r}
+glm.fit$converged
+lrm.fit$convergence
 all.equal(unname(glm.fit$coefficients), as.vector(lrm.fit$coef))
 all.equal(unname(glm.fit$fitted.values), as.vector(lrm.fit$prob))
 ```

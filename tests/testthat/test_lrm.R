@@ -28,6 +28,12 @@ test_that("lrm works: coefficient", {
   expect_equal(as.vector(lrm.coefs), as.vector(glm.coefs))
 })
 
+test_that("lrm works: convergence", {
+  lrm.coefs = lrm(y, X)[["convergence"]]
+  glm.coefs = glm(y ~ X, family = binomial, start=numeric(ncol(X)+1))[["converged"]]
+  expect_equal(as.vector(lrm.coefs), as.vector(glm.coefs))
+})
+
 test_that("lrm works: fitted probabilities", {
   lrm.fitted = lrm(y, X)[["prob"]]
   glm.fitted = glm(y ~ X, family = binomial, start=numeric(ncol(X)+1))[["fitted.values"]]

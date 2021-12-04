@@ -75,6 +75,9 @@ lrm = function(y, X,
   }
   res$coef = beta
   
+  # check convergence
+  res$convergence = ifelse(epsilon <= tol, TRUE, FALSE)
+  
   # save probability and fitted y with estimated coefficients
   eta = X %*% beta
   demoni = 1 + exp(eta)
