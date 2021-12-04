@@ -102,6 +102,6 @@ compare_result = bench::mark({
 }, {
   glm.coef = unname(glm(y ~ X, family = binomial, start=c(rep(0, 11)))[["coefficients"]])
 })
-compare_result
+compare_result[, 3]
 ```
 We see the the lrm() performs slower than glm(), which is reasonable with the IRLS coding in R. The runtime would improve the commented Rcpp code in the src file. You can also check https://github.com/y1zhong/LogisticRegRcpp for more reference.
