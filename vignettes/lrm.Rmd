@@ -40,8 +40,10 @@ library(LogisticReg)
 We'll use a simulated dataset of 100 samples, 10 predictors to show the way of using lrm() and compare it with the results from glm().
 ```{r}
 set.seed(1)
-y = sample(c(0, 1), 100, replace = TRUE)
-X = matrix(rnorm(1e4), 100, 10)
+n = 1000
+p = 10
+y = sample(c(0, 1), n, replace = TRUE)
+X = matrix(rnorm(n * p), n, p)
 ```
 
 ## Fit Models
@@ -49,7 +51,7 @@ X = matrix(rnorm(1e4), 100, 10)
 Now fit model with intercept in both glm() and lrm(). We set the same initial value to achieve same results from Iteratively Reweighting Least Square iterations.
 ```{r}
 # fit glm
-glm.fit = glm(y ~ X, family = binomial, start=c(rep(0, 11)))
+glm.fit = glm(y ~ X, family = binomial, start=c(rep(0, (p+1))))
 
 # fit lrm
 lrm.fit = lrm(y, X)
@@ -82,13 +84,13 @@ lrm.rsqr(lrm.fit)
 
 To predict new data, we can use lrm.predict() with a input matrix of new data and the list returned from lrm().  
 ```{r}
-Xnew = sapply(1:10, function(i)rnorm(3, mean(X[,i]), sd(X[,i])))
+Xnew = sapply(1:p, function(i)rnorm(5, mean(X[,i]), sd(X[,i])))
 lrm.predict(Xnew, lrm.fit)
 ```
 
 We can do the same thing with non-intercept model.  For simplicity we won't check every results here again.
 ```{r}
-glm.fit = glm(y ~ -1 + X, family = binomial, start=c(rep(0, 10)))
+glm.fit = glm(y ~ -1 + X, family = binomial, start=c(rep(0, p)))
 lrm.fit = lrm(y, X, intercept = FALSE)
 ```
 
@@ -100,8 +102,8 @@ We can also compare the run time of lrm() nad glm()
 compare_result = bench::mark({
   lrm.coef = unname(as.vector(lrm(y,X)$coef))
 }, {
-  glm.coef = unname(glm(y ~ X, family = binomial, start=c(rep(0, 11)))[["coefficients"]])
+  glm.coef = unname(glm(y ~ X, family = binomial, start=c(rep(0, (p+1))))[["coefficients"]])
 })
 compare_result[, 3]
 ```
-We see the the lrm() performs slower than glm() but it is comparable. It is reasonable because the IRLS coding in R. The runtime would improve the commented Rcpp code in the src file. You can also check https://github.com/y1zhong/LogisticRegRcpp for more reference.
+We see the the lrm() performs slower than glm(). It is reasonable because the IRLS coding in R. The runtime would improve the commented Rcpp code in the src file. You can also check https://github.com/y1zhong/LogisticRegRcpp for more reference.

@@ -69,7 +69,7 @@ lrm = function(y, X,
     Z = eta + solve(V) %*% (y - mu)
     XV = crossprod(X, V)
     beta_new = solve(XV %*% X) %*% XV %*% Z
-    epsilon = sqrt(t(beta_new-beta) %*% (beta_new - beta))
+    epsilon = sqrt(crossprod((beta_new - beta), (beta_new - beta)))
     beta = beta_new
     iter = iter + 1
   }
@@ -77,14 +77,15 @@ lrm = function(y, X,
   
   # save probability and fitted y with estimated coefficients
   eta = X %*% beta
-  res$prob = exp(eta) / (1 + exp(eta))
+  demoni = 1 + exp(eta)
+  res$prob = exp(eta) / demoni
   res$fitted = ifelse(res$prob  > 0.5, 1, 0)
   
   ### check model fitting
   # save log likelihood
-  res$loglik = sum(y * eta  - log(1+exp(eta)))
+  res$loglik = sum(y * eta  - log(demoni))
   res$deviance = -2 * res$loglik
-  res$aic = 2*p + res$deviance
+  res$aic = 2 * p + res$deviance
 
   return(res)
 }
