@@ -14,10 +14,10 @@
 #'@return list, containing the data and regression results
 #'
 #'@examples
-#' set.seed(1)
-#' y = sample(c(0, 1), 10, replace = TRUE)
-#' X = round(matrix(rnorm(30), 10, 3), 3)
-#' res = lrm(y, X)
+#'set.seed(1)
+#'y = sample(c(0, 1), 10, replace = TRUE)
+#'X = round(matrix(rnorm(30), 10, 3), 3)
+#'res = lrm(y, X)
 #'
 #'@export
 #'
