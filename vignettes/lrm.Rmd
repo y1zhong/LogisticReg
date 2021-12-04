@@ -82,7 +82,7 @@ lrm.rsqr(lrm.fit)
 
 To predict new data, we can use lrm.predict() with a input matrix of new data and the list returned from lrm().  
 ```{r}
-Xnew = sapply(1:10, function(i)rnorm(5, mean(X[,i]), sd(X[,i])))
+Xnew = sapply(1:10, function(i)rnorm(3, mean(X[,i]), sd(X[,i])))
 lrm.predict(Xnew, lrm.fit)
 ```
 
@@ -104,4 +104,4 @@ compare_result = bench::mark({
 })
 compare_result[, 3]
 ```
-We see the the lrm() performs slower than glm(), which is reasonable with the IRLS coding in R. The runtime would improve the commented Rcpp code in the src file. You can also check https://github.com/y1zhong/LogisticRegRcpp for more reference.
+We see the the lrm() performs slower than glm() but it is comparable. It is reasonable because the IRLS coding in R. The runtime would improve the commented Rcpp code in the src file. You can also check https://github.com/y1zhong/LogisticRegRcpp for more reference.
